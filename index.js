@@ -26,7 +26,7 @@ app.post("/", (request, response, next) => {
           new Card({
             title: data.kategori_buku,
             imageUrl: data.gambar_buku,
-            text: `${data.judul_buku}\n Deskripsi Buku : ${data.deskripsi}`,
+            text: `${data.judul_buku} \n Deskripsi Buku : ${data.deskripsi}`,
             buttonText: "pinjam",
             buttonUrl: `pinjam`
           })
