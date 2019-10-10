@@ -44,7 +44,7 @@ app.post("/", (request, response, next) => {
   };
 
   intent.set("coba", coliadi);
-  intent.set("booking", buku);
+  intent.set("Pinjam", buku);
 
   agent.handleRequest(intent);
 });
