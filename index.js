@@ -4,15 +4,10 @@ const Sequelize = require("sequelize");
 const { WebhookClient, Card } = require("dialogflow-fulfillment");
 const app = express();
 const port = process.env.PORT;
-const sequelize = new Sequelize(
-  "db_library",
-  "dwikaputra15",
-  "Matahari 54321",
-  {
-    host: "db4free.net",
-    dialect: "mysql"
-  }
-);
+const sequelize = new Sequelize("db_library", "dwikaputra15", "matahari54321", {
+  host: "db4free.net",
+  dialect: "mysql"
+});
 app.use(express.json());
 
 app.post("/", (request, response, next) => {
