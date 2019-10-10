@@ -18,7 +18,33 @@ app.post("/", (request, response, next) => {
     agent.add("Made adi sedang coli");
   };
 
+  const buku = async agent => {
+    try {
+      const {
+        message,
+        sender
+      } = request.body.originalDetectuveIntentRequest.payload.data;
+      console.log(message.text);
+      console.log(sender.id);
+      const [result] = await sequelize.query("SELECT * FROM tb_buku");
+      result.map(data =>
+        agent.add(
+          new Card({
+            title: data.judul_buku,
+            imageUrl: data.gambar_buku,
+            text: data.deskripsi,
+            buttonText: "Booking",
+            buttonUrl: `Booking`
+          })
+        )
+      );
+    } catch (error) {
+      agent.add("Mohon maaf, tolong melakukan inputan kembali");
+    }
+  };
+
   intent.set("coba", coliadi);
+  intent.set("booking", buku);
 
   agent.handleRequest(intent);
 });
