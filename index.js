@@ -26,9 +26,9 @@ app.post("/", (request, response, next) => {
           new Card({
             title: data.judul_buku,
             imageUrl: data.gambar_buku,
-            text: data.deskripsi,
-            buttonText: "Booking",
-            buttonUrl: `Booking`
+            text: `${data.deskripsi}\n Tipe Buku : ${data.kategori_buku}`,
+            buttonText: "pinjam",
+            buttonUrl: `pinjam`
           })
         )
       );
