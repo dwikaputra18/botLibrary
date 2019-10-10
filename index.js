@@ -24,9 +24,9 @@ app.post("/", (request, response, next) => {
       result.map(data =>
         agent.add(
           new Card({
-            title: data.judul_buku,
+            title: data.kategori_buku,
             imageUrl: data.gambar_buku,
-            text: `${data.deskripsi}\n Tipe Buku : ${data.kategori_buku}`,
+            text: `${data.deskripsi}\n Judul Buku : ${data.judul_buku}`,
             buttonText: "pinjam",
             buttonUrl: `pinjam`
           })
