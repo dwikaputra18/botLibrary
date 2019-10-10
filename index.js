@@ -18,7 +18,7 @@ app.post("/", (request, response, next) => {
     agent.add("Made adi sedang coli");
   };
 
-  const buku = async agent => {
+  const pinjam = async agent => {
     try {
       const [result] = await sequelize.query("SELECT * FROM tb_buku");
       console.log(result);
@@ -40,7 +40,7 @@ app.post("/", (request, response, next) => {
   };
 
   intent.set("coba", coliadi);
-  intent.set("Pinjam", buku);
+  intent.set("Pinjam", pinjam);
 
   agent.handleRequest(intent);
 });
