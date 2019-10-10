@@ -26,7 +26,11 @@ app.post("/", (request, response, next) => {
           new Card({
             title: data.kategori_buku,
             imageUrl: data.gambar_buku,
-            text: `${data.judul_buku}\n\n Deskripsi Buku : ${data.deskripsi}`,
+            text: `${data.judul_buku}\n\nDeskripsi Buku : ${
+              data.deskripsi
+            }\n\nStatus Peminjaman: ${
+              data.status === "0" ? "Belum Dipinjam" : "Sudah Dipinjam"
+            }`,
             buttonText: "pinjam",
             buttonUrl: `pinjam`
           })
