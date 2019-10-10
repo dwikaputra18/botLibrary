@@ -13,6 +13,13 @@ app.use(express.json());
 app.post("/", (request, response, next) => {
   const agent = new WebhookClient({ request, response });
   let intent = new Map();
+
+  const coliadi = agent => {
+    agent.add("Made adi sedang coli");
+  };
+
+  intent.set("coba", coliadi);
+
   agent.handleRequest(intent);
 });
 
