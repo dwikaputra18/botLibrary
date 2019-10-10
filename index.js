@@ -21,17 +21,19 @@ app.post("/", (request, response, next) => {
   const buku = async agent => {
     try {
       const [result] = await sequelize.query("SELECT * FROM tb_buku");
-      result.map(data =>
-        agent.add(
-          new Card({
-            title: data.judul_buku,
-            imageUrl: data.gambar_buku,
-            text: data.deskripsi,
-            buttonText: "Booking",
-            buttonUrl: `Booking`
-          })
-        )
-      );
+      console.log(result);
+      agent.add("Success");
+      // result.map(data =>
+      //   agent.add(
+      //     new Card({
+      //       title: data.judul_buku,
+      //       imageUrl: data.gambar_buku,
+      //       text: data.deskripsi,
+      //       buttonText: "Booking",
+      //       buttonUrl: `Booking`
+      //     })
+      //   )
+      // );
     } catch (error) {
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
