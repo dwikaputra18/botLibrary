@@ -35,6 +35,7 @@ app.post("/", (request, response, next) => {
       //   )
       // );
     } catch (error) {
+      console.log(error);
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
   };
