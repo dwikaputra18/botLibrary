@@ -117,6 +117,13 @@ app.post("/", (request, response, next) => {
       );
       if (metadata > 0) {
         agent.add(result[1].respon);
+        agent.add(
+          new Card({
+            title: "LibraryBot",
+            buttonText: "Booking Buku",
+            buttonUrl: "booking"
+          })
+        );
       } else {
         agent.add(result[2].respon);
       }
