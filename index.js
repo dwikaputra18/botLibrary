@@ -14,10 +14,6 @@ app.post("/", (request, response, next) => {
   const agent = new WebhookClient({ request, response });
   let intent = new Map();
 
-  const coliadi = agent => {
-    agent.add("Made adi sedang coli");
-  };
-
   const pinjam = async agent => {
     try {
       const [result] = await sequelize.query("SELECT * FROM tb_buku");
@@ -41,7 +37,37 @@ app.post("/", (request, response, next) => {
     }
   };
 
-  intent.set("coba", coliadi);
+  const daftarnama = async agent => {
+    try {
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = `daftar - nama`"
+      );
+      agent.add(result[0].respon);
+    } catch (error) {
+      agent.add("Mohon maaf, silahkan untuk menginputkan kembali");
+    }
+  };
+
+  const daftarnim = async agent => {
+    try {
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = `daftar - NIM`"
+      );
+      agent.add(result[0].respon);
+    } catch (error) {
+      agent.add("Mohon maaf, silahkan untuk menginputkan kembali");
+    }
+  };
+
+  const daftaruser = async agent => {
+    try {
+      console.log(JSON.stringify(request.body));
+      agent.add("Mohon cek log nya");
+    } catch (error) {
+      agent.add("Mohon maaf, silahkan untuk menginputkan kembali");
+    }
+  };
+
   intent.set("Pinjam", pinjam);
 
   agent.handleRequest(intent);
