@@ -54,7 +54,9 @@ app.post("/", (request, response, next) => {
   };
   const pinjam = async agent => {
     try {
-      const [result] = await sequelize.query("SELECT * FROM tb_buku");
+      const [result] = await sequelize.query(
+        "SELECT * FROM tb_buku WHERE tb_buku.status = '0'"
+      );
       result.map(data =>
         agent.add(
           new Card({
