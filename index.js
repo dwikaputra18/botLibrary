@@ -52,6 +52,7 @@ app.post("/", (request, response, next) => {
         );
       }
     } catch (error) {
+      console.log(error);
       agent.add("Mohon untuk mengulang menginputkan kembali");
     }
   };
