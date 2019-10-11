@@ -99,8 +99,27 @@ app.post("/", (request, response, next) => {
 
   const daftaruser = async agent => {
     try {
-      console.log(JSON.stringify(request.body));
-      agent.add("Mohon cek log nya");
+      const {
+        nim,
+        fakultas
+      } = request.body.queryResult.outputContexts[0].parameters;
+      const {
+        id,
+        first_name,
+        last_name
+      } = request.body.originalDetectIntentRequest.payload.from;
+
+      const [insert, metadata] = await sequelize.query(
+        `INSERT INTO tb_user VALUES ('${id}', '${first_name} ${last_name}', '${nim}', '${fakultas}')`
+      );
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'daftar - user'"
+      );
+      if (metadata > 0) {
+        agent.add(result[1].respon);
+      } else {
+        agent.add(result[2].respon);
+      }
     } catch (error) {
       agent.add("Mohon maaf, silahkan untuk menginputkan kembali");
     }
