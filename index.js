@@ -19,7 +19,7 @@ app.post("/", (request, response, next) => {
       const { text, from } = request.body.originalDetectIntentRequest.payload;
 
       const [user] = await sequelize.query(
-        `SELECT * FROM tb_user WHERE tb_user.id_user = ${from.id}`
+        `SELECT * FROM tb_user WHERE tb_user.id_user = '${from.id}'`
       );
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = `awal`"
