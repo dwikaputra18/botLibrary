@@ -65,13 +65,45 @@ app.post("/", (request, response, next) => {
             }\n\nStatus Peminjaman: ${
               data.status === "0" ? "Belum Dipinjam" : "Sudah Dipinjam"
             }`,
-            buttonText: "pinjam",
-            buttonUrl: `pinjam`
+            buttonText: "pinjam buku",
+            buttonUrl: `${data.id_buku}`
           })
         )
       );
     } catch (error) {
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
+    }
+  };
+
+  const pinjambuku = async agent => {
+    try {
+      console.log(JSON.stringify(request.body));
+      // const {
+      //   postback,
+      //   sender
+      // } = request.body.originalDetectIntentRequest.payload.data;
+
+      // const [insert, metadata] = await sequelize.query(
+      //   `INSERT INTO tb_pinjam VALUES (NULL, '${postback.payload}', '${sender.id}')`
+      // );
+      // const [buku] = await sequelize.query(
+      //   `SELECT * FROM tb_buku WHERE tb_buku.id_buku = '${postback.payload}'`
+      // );
+      // const [result] = await sequelize.query(
+      //   "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'Pinjam - Buku'"
+      // );
+
+      // if (metadata > 0) {
+      //   const respon = result[0].respon.replace(
+      //     "$judul_buku",
+      //     buku[0].judul_buku
+      //   );
+      //   agent.add(respon);
+      // } else {
+      //   agent.add(result[0].respon);
+      // }
+    } catch (error) {
+      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
   };
 
@@ -137,6 +169,7 @@ app.post("/", (request, response, next) => {
   intent.set("daftar - nim", daftarnim);
   intent.set("daftar - user", daftaruser);
   intent.set("Pinjam", pinjam);
+  intent.set("Pinjam - Buku", pinjambuku);
 
   agent.handleRequest(intent);
 });
