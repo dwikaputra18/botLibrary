@@ -173,6 +173,27 @@ app.post("/", (request, response, next) => {
     }
   };
 
+  const listBuku = async agent => {
+    try {
+      const { id } = request.body.originalDetectIntentRequest.payload.from;
+      const [result] = await sequelize.query(
+        `SELECT tb_buku.kategori_buku, tb_buku.judul_buku, tb_buku.gambar_buku, tb_buku.deskripsi FROM tb_buku, tb_pinjam WHERE tb_pinjam.id_user = '${id}' AND tb_pinjam.id_buku = tb_buku.id_buku`
+      );
+
+      result.map(data =>
+        agent.add(
+          new Card({
+            title: data.kategori_buku,
+            imageUrl: data.gambar_buku,
+            text: `${data.judul_buku}\n\nDeskripsi Buku : ${data.deskripsi}`
+          })
+        )
+      );
+    } catch (error) {
+      agent.add("Mohon maaf, tolong melakukan inputan kembali");
+    }
+  };
+
   intent.set("Awal", awalan);
   intent.set("daftar", daftar);
   intent.set("daftar - nim", daftarnim);
