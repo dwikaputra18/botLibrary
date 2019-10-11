@@ -75,10 +75,21 @@ app.post("/", (request, response, next) => {
     }
   };
 
-  const daftarnim = async agent => {
+  const daftar = async agent => {
     try {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'daftar - nim'"
+      );
+      agent.add(result[0].respon);
+    } catch (error) {
+      agent.add("Mohon maaf, silahkan untuk menginputkan kembali");
+    }
+  };
+
+  const daftarnim = async agent => {
+    try {
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'daftar - user'"
       );
       agent.add(result[0].respon);
     } catch (error) {
@@ -96,6 +107,7 @@ app.post("/", (request, response, next) => {
   };
 
   intent.set("Awal", awalan);
+  intent.set("daftar", daftar);
   intent.set("daftar - nim", daftarnim);
   intent.set("daftar - user", daftaruser);
   intent.set("Pinjam", pinjam);
