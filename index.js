@@ -22,7 +22,7 @@ app.post("/", (request, response, next) => {
         `SELECT * FROM tb_user WHERE tb_user.id_user = '${from.id}'`
       );
       const [result] = await sequelize.query(
-        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = `awal`"
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'awal'"
       );
 
       if (user.length > 0) {
@@ -78,7 +78,7 @@ app.post("/", (request, response, next) => {
   const daftarnim = async agent => {
     try {
       const [result] = await sequelize.query(
-        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = `daftar - nim`"
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'daftar - nim'"
       );
       agent.add(result[0].respon);
     } catch (error) {
