@@ -77,31 +77,31 @@ app.post("/", (request, response, next) => {
 
   const pinjambuku = async agent => {
     try {
-      console.log(JSON.stringify(request.body));
-      // const {
-      //   postback,
-      //   sender
-      // } = request.body.originalDetectIntentRequest.payload.data;
+      const {
+        from,
+        data
+      } = request.body.originalDetectIntentRequest.payload.callback_query;
 
-      // const [insert, metadata] = await sequelize.query(
-      //   `INSERT INTO tb_pinjam VALUES (NULL, '${postback.payload}', '${sender.id}')`
-      // );
-      // const [buku] = await sequelize.query(
-      //   `SELECT * FROM tb_buku WHERE tb_buku.id_buku = '${postback.payload}'`
-      // );
-      // const [result] = await sequelize.query(
-      //   "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'Pinjam - Buku'"
-      // );
+      const [insert, metadata] = await sequelize.query(
+        `INSERT INTO tb_pinjam VALUES (NULL, '${new Date().getFullYear()}-${new Date().getMonth() +
+          1}-${new Date().getDate()}', '${data}', '${from.id}')`
+      );
+      const [buku] = await sequelize.query(
+        `SELECT * FROM tb_buku WHERE tb_buku.id_buku = '${data}'`
+      );
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'Pinjam - Buku'"
+      );
 
-      // if (metadata > 0) {
-      //   const respon = result[0].respon.replace(
-      //     "$judul_buku",
-      //     buku[0].judul_buku
-      //   );
-      //   agent.add(respon);
-      // } else {
-      //   agent.add(result[0].respon);
-      // }
+      if (metadata > 0) {
+        const respon = result[0].respon.replace(
+          "$judul_buku",
+          buku[0].judul_buku
+        );
+        agent.add(respon);
+      } else {
+        agent.add(result[0].respon);
+      }
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
