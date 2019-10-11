@@ -49,7 +49,7 @@ app.post("/", (request, response, next) => {
         );
       }
     } catch (error) {
-      agent.add("Mohon untuk mengulang menginputkan kembali");
+      agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
   };
   const pinjam = async agent => {
@@ -99,11 +99,18 @@ app.post("/", (request, response, next) => {
           buku[0].judul_buku
         );
         agent.add(respon);
+        agent.add(
+          new Card({
+            title: "LibraryBot",
+            buttonText: "Booking Buku",
+            buttonUrl: "booking"
+          })
+        );
       } else {
         agent.add(result[0].respon);
       }
     } catch (error) {
-      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
+      agent.add("Mohon maaf, tolong melakukan inputan kembali ");
     }
   };
 
@@ -114,7 +121,7 @@ app.post("/", (request, response, next) => {
       );
       agent.add(result[0].respon);
     } catch (error) {
-      agent.add("Mohon maaf, silahkan untuk menginputkan kembali");
+      agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
   };
 
@@ -125,7 +132,7 @@ app.post("/", (request, response, next) => {
       );
       agent.add(result[0].respon);
     } catch (error) {
-      agent.add("Mohon maaf, silahkan untuk menginputkan kembali");
+      agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
   };
 
@@ -160,7 +167,7 @@ app.post("/", (request, response, next) => {
         agent.add(result[2].respon);
       }
     } catch (error) {
-      agent.add("Mohon maaf, silahkan untuk menginputkan kembali");
+      agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
   };
 
