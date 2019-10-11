@@ -16,45 +16,39 @@ app.post("/", (request, response, next) => {
 
   const awalan = async agent => {
     try {
-      console.log(JSON.stringify(request.body));
-      agent.add("Hola");
-      // const {
-      //   message,
-      //   sender
-      // } = request.body.originalDetectIntentRequest.payload.data;
+      const { text, from } = request.body.originalDetectIntentRequest.payload;
 
-      // const [user] = await sequelize.query(
-      //   `SELECT * FROM tb_user WHERE tb_user.id_user = ${sender.id}`
-      // );
-      // const [result] = await sequelize.query(
-      //   "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = `awal`"
-      // );
+      const [user] = await sequelize.query(
+        `SELECT * FROM tb_user WHERE tb_user.id_user = ${from.id}`
+      );
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = `awal`"
+      );
 
-      // if (user.length > 0) {
-      //   let respon = result[0].respon.replace("$nama_user", user[0].nama_user);
-      //   respon = respon.replace("$pesan", message.text);
+      if (user.length > 0) {
+        let respon = result[0].respon.replace("$nama_user", user[0].nama_user);
+        respon = respon.replace("$pesan", text);
 
-      //   agent.add(respon);
-      //   agent.add(
-      //     new Card({
-      //       title: "LibraryBot",
-      //       buttonText: "Booking Buku",
-      //       buttonUrl: "booking"
-      //     })
-      //   );
-      // } else {
-      //   const respon = result[1].respon.replace("$pesan", message.text);
-      //   agent.add(respon);
-      //   agent.add(
-      //     new Card({
-      //       title: "LibraryBot",
-      //       buttonText: "Daftar Akun",
-      //       buttonUrl: "daftar"
-      //     })
-      //   );
-      // }
+        agent.add(respon);
+        agent.add(
+          new Card({
+            title: "LibraryBot",
+            buttonText: "Booking Buku",
+            buttonUrl: "booking"
+          })
+        );
+      } else {
+        const respon = result[1].respon.replace("$pesan", text);
+        agent.add(respon);
+        agent.add(
+          new Card({
+            title: "LibraryBot",
+            buttonText: "Daftar Akun",
+            buttonUrl: "daftar"
+          })
+        );
+      }
     } catch (error) {
-      console.log(error);
       agent.add("Mohon untuk mengulang menginputkan kembali");
     }
   };
@@ -81,21 +75,10 @@ app.post("/", (request, response, next) => {
     }
   };
 
-  const daftarnama = async agent => {
-    try {
-      const [result] = await sequelize.query(
-        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = `daftar - nama`"
-      );
-      agent.add(result[0].respon);
-    } catch (error) {
-      agent.add("Mohon maaf, silahkan untuk menginputkan kembali");
-    }
-  };
-
   const daftarnim = async agent => {
     try {
       const [result] = await sequelize.query(
-        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = `daftar - NIM`"
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = `daftar - nim`"
       );
       agent.add(result[0].respon);
     } catch (error) {
@@ -113,7 +96,6 @@ app.post("/", (request, response, next) => {
   };
 
   intent.set("Awal", awalan);
-  intent.set("daftar - nama", daftarnama);
   intent.set("daftar - nim", daftarnim);
   intent.set("daftar - user", daftaruser);
   intent.set("Pinjam", pinjam);
