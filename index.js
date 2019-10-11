@@ -200,6 +200,7 @@ app.post("/", (request, response, next) => {
   intent.set("daftar - user", daftaruser);
   intent.set("Pinjam", pinjam);
   intent.set("Pinjam - Buku", pinjambuku);
+  intent.set("list buku", listBuku);
 
   agent.handleRequest(intent);
 });
