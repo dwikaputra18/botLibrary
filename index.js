@@ -187,25 +187,13 @@ app.post("/", (request, response, next) => {
           new Card({
             title: data.kategori_buku,
             imageUrl: data.gambar_buku,
-            text: `${data.judul_buku}\n\nDeskripsi Buku : ${data.deskripsi}`
+            text: `${data.judul_buku}\n\nDeskripsi Buku : ${data.deskripsi}`,
+            buttonText: "Kembali",
+            buttonUrl: "booking"
           })
         )
       );
-
-      if (metadata > 0) {
-        agent.add(result[0].respon);
-        agent.add(
-          new Card({
-            title: "LibraryBot",
-            buttonText: "Menu Booking",
-            buttonUrl: "booking"
-          })
-        );
-      } else {
-        agent.add(result[0].respon);
-      }
     } catch (error) {
-      console.log(error);
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
   };
