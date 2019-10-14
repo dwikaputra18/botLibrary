@@ -104,8 +104,8 @@ app.post("/", (request, response, next) => {
         agent.add(
           new Card({
             title: "LibraryBot",
-            buttonText: "Pinjam buku lagi",
-            buttonUrl: "pinjam"
+            buttonText: "Menu booking",
+            buttonUrl: "booking"
           })
         );
       } else {
