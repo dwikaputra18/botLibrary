@@ -187,7 +187,9 @@ app.post("/", (request, response, next) => {
           new Card({
             title: data.kategori_buku,
             imageUrl: data.gambar_buku,
-            text: `${data.judul_buku}\n\nDeskripsi Buku : ${data.deskripsi}`
+            text: `${data.judul_buku}\n\nDeskripsi Buku : ${data.deskripsi}`,
+            buttonText: "Menu Booking",
+            buttonUrl: "booking"
           })
         )
       );
