@@ -29,7 +29,7 @@ app.post("/", (request, response, next) => {
         let respon = result[0].respon.replace("$nama_user", user[0].nama_user);
         respon = respon.replace("$pesan", text);
 
-        await inbox();
+        const id_inbox = await inbox();
         agent.add(respon);
         agent.add(
           new Card({
@@ -38,8 +38,12 @@ app.post("/", (request, response, next) => {
             buttonUrl: "booking"
           })
         );
+        if (id_inbox) await outbox(id_inbox, respon);
       } else {
         const respon = result[1].respon.replace("$pesan", text);
+
+        const id_inbox = await inbox();
+
         agent.add(respon);
         agent.add(
           new Card({
@@ -48,6 +52,8 @@ app.post("/", (request, response, next) => {
             buttonUrl: "daftar"
           })
         );
+
+        if (id_inbox) await outbox(id_inbox, respon);
       }
     } catch (error) {
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
@@ -65,17 +71,17 @@ app.post("/", (request, response, next) => {
     }
   };
 
-  const outbox = async () => {
+  const outbox = async (inbox_id, message) => {
     try {
-      const { message_id } = request.body.originalDetectIntentRequest.payload;
-      const { queryText } = request.body.queryResult;
-      const date = new Date();
-      const { id } = request.body.originalDetectIntentRequest.payload.from;
       const [result, metadata] = await sequelize.query(
-        `INSERT INTO tb_inbox (id_pesan, pesan_user, tanggal, id_user, status) VALUES (${message_id}, '${queryText}', '${date.getFullYear()}-${date.getMonth() +
-          1}-${date.getDate()}', ${id}, '0')`,
-        { type: sequelize.QueryTypes.INSERT }
+        `INSERT INTO tb_outbox (pesan_bot, id_inbox) VALUES ('${message}', ${inbox_id})`
       );
+
+      if (metadata > 0) {
+        await sequelize.query(
+          `UPDATE tb_inbox SET tb_inbox.status = '1' WHERE tb_inbox.id_inbox = ${inbox_id}`
+        );
+      }
     } catch (error) {
       console.log(error);
     }
