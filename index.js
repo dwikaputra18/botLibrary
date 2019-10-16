@@ -16,6 +16,7 @@ app.post("/", (request, response, next) => {
 
   const awalan = async agent => {
     try {
+      console.log(JSON.stringify(request.body));
       const { text, from } = request.body.originalDetectIntentRequest.payload;
 
       const [user] = await sequelize.query(
@@ -52,6 +53,15 @@ app.post("/", (request, response, next) => {
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
   };
+
+  const inbox = async () => {
+    try {
+      const [result, metadata] = await sequelize.query(
+        `INSERT INTO tb_inbox (id_pesan, pesan_user, tanggal, id_user, status) VALUES ()`
+      );
+    } catch (error) {}
+  };
+
   const pinjam = async agent => {
     try {
       const [result] = await sequelize.query(
