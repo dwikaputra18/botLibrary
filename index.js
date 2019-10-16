@@ -16,7 +16,6 @@ app.post("/", (request, response, next) => {
 
   const awalan = async agent => {
     try {
-      console.log(JSON.stringify(request.body));
       const { text, from } = request.body.originalDetectIntentRequest.payload;
 
       const [user] = await sequelize.query(
@@ -30,6 +29,7 @@ app.post("/", (request, response, next) => {
         let respon = result[0].respon.replace("$nama_user", user[0].nama_user);
         respon = respon.replace("$pesan", text);
 
+        await inbox();
         agent.add(respon);
         agent.add(
           new Card({
@@ -54,12 +54,37 @@ app.post("/", (request, response, next) => {
     }
   };
 
+  const outbox = async () => {
+    try {
+      const { message_id } = request.body.originalDetectIntentRequest.payload;
+      const { queryText } = request.body.queryResult;
+      const date = new Date();
+      const { id } = request.body.originalDetectIntentRequest.payload.from;
+      const [result, metadata] = await sequelize.query(
+        `INSERT INTO tb_inbox (id_pesan, pesan_user, tanggal, id_user, status) VALUES (${message_id}, '${queryText}', '${date.getFullYear()}-${date.getMonth() +
+          1}-${date.getDate()}', ${id}, '0')`,
+        { type: sequelize.QueryTypes.INSERT }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const inbox = async () => {
     try {
+      const { message_id } = request.body.originalDetectIntentRequest.payload;
+      const { queryText } = request.body.queryResult;
+      const date = new Date();
+      const { id } = request.body.originalDetectIntentRequest.payload.from;
       const [result, metadata] = await sequelize.query(
-        `INSERT INTO tb_inbox (id_pesan, pesan_user, tanggal, id_user, status) VALUES ()`
+        `INSERT INTO tb_inbox (id_pesan, pesan_user, tanggal, id_user, status) VALUES (${message_id}, '${queryText}', '${date.getFullYear()}-${date.getMonth() +
+          1}-${date.getDate()}', ${id}, '0')`,
+        { type: sequelize.QueryTypes.INSERT }
       );
-    } catch (error) {}
+      console.log(result, metadata);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const pinjam = async agent => {
@@ -222,3 +247,38 @@ app.post("/", (request, response, next) => {
 app.listen(port, () => {
   console.log(`server start at ${port}`);
 });
+
+const o = {
+  responseId: "0b6c0067-72bd-4bb2-9f24-0d19a216b072-f6406966",
+  queryResult: {
+    queryText: "hai",
+    parameters: { salam: "hai" },
+    allRequiredParamsPresent: true,
+    fulfillmentMessages: [{ text: { text: [""] } }],
+    intent: {
+      name:
+        "projects/botperpus-tjggqu/agent/intents/93d58939-0267-4f13-8649-de43a1485c66",
+      displayName: "Awal"
+    },
+    intentDetectionConfidence: 1,
+    languageCode: "en"
+  },
+  originalDetectIntentRequest: {
+    source: "telegram",
+    payload: {
+      from: {
+        language_code: "en",
+        last_name: "Putra",
+        id: 680469796,
+        first_name: "Dwika",
+        username: "Dwikaputra"
+      },
+      chat: { id: "680469796", type: "private" },
+      message_id: 793,
+      text: "hai",
+      date: 1571206274
+    }
+  },
+  session:
+    "projects/botperpus-tjggqu/agent/sessions/4b342deb-af47-3279-a28e-144c3ebb880b"
+};
