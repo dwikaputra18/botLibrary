@@ -54,6 +54,17 @@ app.post("/", (request, response, next) => {
     }
   };
 
+  const gagal = async () => {
+    try {
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'Default Fallback Intent'"
+      );
+      agent.add(result[0].respon);
+    } catch (error) {
+      agent.add("Mohon maaf, tolong melakukan inputan kembali");
+    }
+  };
+
   const outbox = async () => {
     try {
       const { message_id } = request.body.originalDetectIntentRequest.payload;
@@ -81,7 +92,8 @@ app.post("/", (request, response, next) => {
           1}-${date.getDate()}', ${id}, '0')`,
         { type: sequelize.QueryTypes.INSERT }
       );
-      console.log(result, metadata);
+
+      return metadata > 0 ? result : null;
     } catch (error) {
       console.log(error);
     }
@@ -240,6 +252,7 @@ app.post("/", (request, response, next) => {
   intent.set("Pinjam", pinjam);
   intent.set("Pinjam - Buku", pinjambuku);
   intent.set("list buku", listBuku);
+  intent.set("Default Fallback Intent", gagal);
 
   agent.handleRequest(intent);
 });
