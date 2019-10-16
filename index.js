@@ -39,6 +39,7 @@ app.post("/", (request, response, next) => {
           })
         );
         if (id_inbox) await outbox(id_inbox, respon);
+        if (id_inbox) await outbox(id_inbox, "booking");
       } else {
         const respon = result[1].respon.replace("$pesan", text);
 
@@ -54,6 +55,7 @@ app.post("/", (request, response, next) => {
         );
 
         if (id_inbox) await outbox(id_inbox, respon);
+        if (id_inbox) await outbox(id_inbox, "daftar");
       }
     } catch (error) {
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
@@ -65,7 +67,9 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'Default Fallback Intent'"
       );
+      const id_inbox = await inbox();
       agent.add(result[0].respon);
+      if (id_inbox) await outbox(id_inbox, result[0].respon)
     } catch (error) {
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
@@ -110,7 +114,8 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT * FROM tb_buku WHERE tb_buku.status = '0'"
       );
-      result.map(data =>
+      result.map(data => {
+        const id_inbox = await inbox();
         agent.add(
           new Card({
             title: data.kategori_buku,
@@ -123,8 +128,9 @@ app.post("/", (request, response, next) => {
             buttonText: "pinjam buku",
             buttonUrl: `${data.id_buku}`
           })
-        )
-      );
+        );
+        if (id_inbox) await outbox(id_inbox, data.id_buku)
+      });
     } catch (error) {
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
@@ -153,6 +159,7 @@ app.post("/", (request, response, next) => {
           "$judul_buku",
           buku[0].judul_buku
         );
+        const id_inbox = await inbox();
         agent.add(respon);
         agent.add(
           new Card({
@@ -161,6 +168,9 @@ app.post("/", (request, response, next) => {
             buttonUrl: "booking"
           })
         );
+        
+      if (id_inbox) await outbox(id_inbox, respon)
+      if (id_inbox) await outbox(id_inbox, "booking")
       } else {
         agent.add(result[0].respon);
       }
@@ -174,7 +184,9 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'daftar - nim'"
       );
+      const id_inbox = await inbox();
       agent.add(result[0].respon);
+      if (id_inbox) await outbox(id_inbox, result[0].respon)
     } catch (error) {
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
@@ -185,7 +197,9 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'daftar - user'"
       );
+      const id_inbox = await inbox();
       agent.add(result[0].respon);
+      if (id_inbox) await outbox(id_inbox, result[0].respon)
     } catch (error) {
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
@@ -210,6 +224,7 @@ app.post("/", (request, response, next) => {
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'daftar - user'"
       );
       if (metadata > 0) {
+        const id_inbox = await inbox();
         agent.add(result[1].respon);
         agent.add(
           new Card({
@@ -218,8 +233,12 @@ app.post("/", (request, response, next) => {
             buttonUrl: "booking"
           })
         );
+        if (id_inbox) await outbox(id_inbox, result[1].respon)
+        if (id_inbox) await outbox(id_inbox, "booking")
       } else {
+        const id_inbox = await inbox();
         agent.add(result[2].respon);
+        if (id_inbox) await outbox(id_inbox, result[2].respon)
       }
     } catch (error) {
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
@@ -235,7 +254,8 @@ app.post("/", (request, response, next) => {
         `SELECT tb_buku.kategori_buku, tb_buku.judul_buku, tb_buku.gambar_buku, tb_buku.deskripsi FROM tb_buku, tb_pinjam WHERE tb_pinjam.id_user = '${id}' AND tb_pinjam.id_buku = tb_buku.id_buku`
       );
 
-      result.map(data =>
+      result.map(data => {
+        const id_inbox = await inbox();
         agent.add(
           new Card({
             title: data.kategori_buku,
@@ -245,7 +265,8 @@ app.post("/", (request, response, next) => {
             buttonUrl: "booking"
           })
         )
-      );
+        if (id_inbox) await outbox(id_inbox, "booking")
+      })
     } catch (error) {
       agent.add("Mohon maaf, tolong melakukan inputan kembali");
     }
