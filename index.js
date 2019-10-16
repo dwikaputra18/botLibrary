@@ -91,13 +91,18 @@ app.post("/", (request, response, next) => {
     }
   };
 
-  const inbox = async () => {
+  const inbox = async (type = null) => {
     try {
       console.log(JSON.stringify(request.body));
-      const { message_id } = request.body.originalDetectIntentRequest.payload;
+      const message_id = type
+        ? request.body.originalDetectIntentRequest.payload.callback_query
+            .message.message_id
+        : request.body.originalDetectIntentRequest.payload.message_id;
       const { queryText } = request.body.queryResult;
       const date = new Date();
-      const { id } = request.body.originalDetectIntentRequest.payload.from;
+      const id = type
+        ? request.body.originalDetectIntentRequest.payload.callback_query.from
+        : request.body.originalDetectIntentRequest.payload.from;
       const [result, metadata] = await sequelize.query(
         `INSERT INTO tb_inbox (id_pesan, pesan_user, tanggal, id_user, status) VALUES (${message_id}, '${queryText}', '${date.getFullYear()}-${date.getMonth() +
           1}-${date.getDate()}', ${id}, '0')`,
@@ -115,8 +120,8 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT * FROM tb_buku WHERE tb_buku.status = '0'"
       );
+      const id_inbox = await inbox("button");
       result.map(async data => {
-        const id_inbox = await inbox();
         agent.add(
           new Card({
             title: data.kategori_buku,
@@ -160,7 +165,7 @@ app.post("/", (request, response, next) => {
           "$judul_buku",
           buku[0].judul_buku
         );
-        const id_inbox = await inbox();
+        const id_inbox = await inbox("button");
         agent.add(respon);
         agent.add(
           new Card({
@@ -185,7 +190,7 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'daftar - nim'"
       );
-      const id_inbox = await inbox();
+      const id_inbox = await inbox("button");
       agent.add(result[0].respon);
       if (id_inbox) await outbox(id_inbox, result[0].respon);
     } catch (error) {
@@ -254,9 +259,8 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         `SELECT tb_buku.kategori_buku, tb_buku.judul_buku, tb_buku.gambar_buku, tb_buku.deskripsi FROM tb_buku, tb_pinjam WHERE tb_pinjam.id_user = '${id}' AND tb_pinjam.id_buku = tb_buku.id_buku`
       );
-
+      const id_inbox = await inbox("button");
       result.map(async data => {
-        const id_inbox = await inbox();
         agent.add(
           new Card({
             title: data.kategori_buku,
@@ -288,38 +292,3 @@ app.post("/", (request, response, next) => {
 app.listen(port, () => {
   console.log(`server start at ${port}`);
 });
-
-const o = {
-  responseId: "0b6c0067-72bd-4bb2-9f24-0d19a216b072-f6406966",
-  queryResult: {
-    queryText: "hai",
-    parameters: { salam: "hai" },
-    allRequiredParamsPresent: true,
-    fulfillmentMessages: [{ text: { text: [""] } }],
-    intent: {
-      name:
-        "projects/botperpus-tjggqu/agent/intents/93d58939-0267-4f13-8649-de43a1485c66",
-      displayName: "Awal"
-    },
-    intentDetectionConfidence: 1,
-    languageCode: "en"
-  },
-  originalDetectIntentRequest: {
-    source: "telegram",
-    payload: {
-      from: {
-        language_code: "en",
-        last_name: "Putra",
-        id: 680469796,
-        first_name: "Dwika",
-        username: "Dwikaputra"
-      },
-      chat: { id: "680469796", type: "private" },
-      message_id: 793,
-      text: "hai",
-      date: 1571206274
-    }
-  },
-  session:
-    "projects/botperpus-tjggqu/agent/sessions/4b342deb-af47-3279-a28e-144c3ebb880b"
-};
