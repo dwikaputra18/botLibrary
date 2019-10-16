@@ -93,6 +93,7 @@ app.post("/", (request, response, next) => {
 
   const inbox = async () => {
     try {
+      console.log(JSON.stringify(request.body));
       const { message_id } = request.body.originalDetectIntentRequest.payload;
       const { queryText } = request.body.queryResult;
       const date = new Date();
