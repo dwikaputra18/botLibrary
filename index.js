@@ -101,9 +101,9 @@ app.post("/", (request, response, next) => {
       const date = new Date();
       const id = type
         ? request.body.originalDetectIntentRequest.payload.callback_query.from
-        : request.body.originalDetectIntentRequest.payload.from;
+            .id
+        : request.body.originalDetectIntentRequest.payload.from.id;
 
-      if (type) console.log(message_id, queryText, id);
       const [result, metadata] = await sequelize.query(
         `INSERT INTO tb_inbox (id_pesan, pesan_user, tanggal, id_user, status) VALUES (${message_id}, '${queryText}', '${date.getFullYear()}-${date.getMonth() +
           1}-${date.getDate()}', ${id}, '0')`,
