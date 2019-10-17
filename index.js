@@ -62,7 +62,7 @@ app.post("/", (request, response, next) => {
     }
   };
 
-  const gagal = async () => {
+  const gagalcoba = async () => {
     try {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.intent = 'Default Fallback Intent'"
@@ -285,7 +285,7 @@ app.post("/", (request, response, next) => {
   intent.set("Pinjam", pinjam);
   intent.set("Pinjam - Buku", pinjambuku);
   intent.set("list buku", listBuku);
-  intent.set("Default Fallback Intent", gagal);
+  intent.set("Default Fallback Intent", gagalcoba);
 
   agent.handleRequest(intent);
 });
